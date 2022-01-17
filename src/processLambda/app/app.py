@@ -87,7 +87,7 @@ def handler(event, context):
         process_files(objs_keys, MEETING_ID, file_type)
         # delete object after processing the audio files
         for object in audioObjects:
-            s3.delete_object(object['Key'])
+            s3.delete_object(SOURCE_BUCKET, object['Key'])
     else:
         print("No Audio")
 
