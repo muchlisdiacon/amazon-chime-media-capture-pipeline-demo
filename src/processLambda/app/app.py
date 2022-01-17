@@ -14,9 +14,7 @@ def process_files(objs_keys, MEETING_ID, file_type):
     print(MEETING_ID)
     with open('/tmp/' + file_type +'_list.txt', 'w') as f:
         for k in objs_keys:
-            print(k)
             basename = os.path.splitext(k)[0]
-            print("basename:"+basename)
             ffmpeg_cmd = "ffmpeg -i /tmp/" + k + " -bsf:v h264_mp4toannexb -f mpegts -framerate 15 -c copy /tmp/" + basename + "-" + file_type + ".ts -y"
             command1 = shlex.split(ffmpeg_cmd)
             p1 = subprocess.run(command1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -87,7 +85,10 @@ def handler(event, context):
         process_files(objs_keys, MEETING_ID, file_type)
         # delete object after processing the audio files
         for object in audioObjects:
-            s3.delete_object(SOURCE_BUCKET, object['Key'])
+            s3.delete_object(
+                Bucket=SOURCE_BUCKET,
+                Key=object['Key']
+            )
     else:
         print("No Audio")
 
